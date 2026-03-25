@@ -64,9 +64,9 @@ app.post('/notify/message-delete', (request, response) => {
 })
 
 app.patch('/notify/message-read', (request, response) => {
-    const { messageId, chatId, userId } = request.body;
+    const { chatId, userId } = request.body;
 
-    io.to(`chat_${chatId}`).emit('message_read', { messageId, userId })
+    io.to(`chat_${chatId}`).emit('message_read', { userId })
 
     response.sendStatus(200);
 })
