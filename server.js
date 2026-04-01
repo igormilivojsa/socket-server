@@ -75,11 +75,12 @@ io.on("connection", (socket) => {
     socket.on('join_user', (userId) => {
         socket.userId = userId;
 
+        socket.join(`user_${userId}`);
+
         if (!activeUsers.has(userId)) {
             activeUsers.set(userId, new Set())
             io.emit('online_user', { userId })
         }
-
         activeUsers.get(userId)?.add(socket.id)
 
         const currentlyOnline = Array.from(activeUsers.keys())
