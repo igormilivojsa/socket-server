@@ -21,7 +21,7 @@ server.listen(3001, '0.0.0.0', () => {
 })
 
 app.post('/notify/message', (request, response) => {
-    const {id, chatId, body, user} = request.body;
+    const {id, chatId, body, user, latestMessage, latestMessageBy} = request.body;
 
     io.to(`chat_${chatId}`).emit('new_message', {
         id,
@@ -30,6 +30,8 @@ app.post('/notify/message', (request, response) => {
         chat: {
             id: chatId,
         },
+        latestMessage,
+        latestMessageBy,
     })
 
     response.sendStatus(200);
