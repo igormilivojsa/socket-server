@@ -81,22 +81,28 @@ app.patch('/notify/message-read', (request, response) => {
     response.sendStatus(200);
 })
 
+io.use((socket, next) => {
+
+})
+
 io.on("connection", (socket) => {
-    socket.on('join_user', (userId) => {
-        socket.userId = userId;
+
+    socket.on('join_user', () => {
+        const userId = socket.userId;
 
         socket.join(`user_${userId}`);
 
         if (!activeUsers.has(userId)) {
-            activeUsers.set(userId, new Set())
-            io.emit('online_user', { userId })
+            activeUsers.set(userId, new Set());
+            io.emit('online_user', { userId });
         }
-        activeUsers.get(userId)?.add(socket.id)
 
-        const currentlyOnline = Array.from(activeUsers.keys())
-        socket.emit('current_online_users', { userIds: currentlyOnline })
+        activeUsers.get(userId).add(socket.id);
+
+        socket.emit('current_online_users', {
+            userIds: Array.from(activeUsers.keys())
+        });
     });
-
 
     socket.on('join_chat', (chatId) => {
         socket.join(`chat_${chatId}`)
